@@ -16,3 +16,4 @@ coverage:
 ignore:
   - "pkg/mocks"
   - "mock_*.go"
+  - "*_test.go"
