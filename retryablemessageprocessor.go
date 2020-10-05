@@ -5,12 +5,36 @@ import (
 	"math"
 	"time"
 
+	"github.com/pkg/errors"
+
 	"github.com/aws/aws-sdk-go/service/kinesis"
 	"github.com/rs/xstats"
 )
 
 // MaxRetries is the maximum number of time's we'd like to retry processing a record before quitting
 const consumerRetriesExceeded = "kinesis.consumer_error.retries_exceeded"
+
+// MaxRetriesExceededError implements MessageProcessError and is used to indicate to upstream application/
+// decorators that retries have been attempted and exhausted
+type MaxRetriesExceededError struct {
+	Retryable bool
+	OrigErr   error
+	Wait      int
+}
+
+func (t MaxRetriesExceededError) Error() error {
+	return t.OrigErr
+}
+
+// IsRetryable indicates whether or not the JiraClient Error that was returned should be retried
+func (t MaxRetriesExceededError) IsRetryable() bool {
+	return t.Retryable
+}
+
+// RetryAfter is not relevant in context of MaxRetriesExceededError as IsRetryable is set to false
+func (t MaxRetriesExceededError) RetryAfter() int {
+	return t.Wait
+}
 
 // RetryableMessageProcessor is a `MessageProcessor` decorator that re-attempts
 // processing of messages 'maxAttempts' number of times in case of failures
@@ -46,6 +70,12 @@ func (t *RetryableMessageProcessor) ProcessMessage(ctx context.Context, record *
 
 	if attemptNum >= t.maxAttempts {
 		stat.Count(consumerRetriesExceeded, 1)
+		maxRetriesExceededErr := MaxRetriesExceededError{
+			Retryable: false,
+			OrigErr:   errors.Wrap(messageProcErr.Error(), "Max Retries Exceeded"),
+			Wait:      0,
+		}
+		return maxRetriesExceededErr
 	}
 	return messageProcErr
 }
