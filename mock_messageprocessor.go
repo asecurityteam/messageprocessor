@@ -36,10 +36,10 @@ func (m *MockMessageProcessor) EXPECT() *MockMessageProcessorMockRecorder {
 }
 
 // ProcessMessage mocks base method.
-func (m *MockMessageProcessor) ProcessMessage(ctx context.Context, record *kinesis.Record) MessageProcessError {
+func (m *MockMessageProcessor) ProcessMessage(ctx context.Context, record *kinesis.Record) MessageProcessorError {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "ProcessMessage", ctx, record)
-	ret0, _ := ret[0].(MessageProcessError)
+	ret0, _ := ret[0].(MessageProcessorError)
 	return ret0
 }
 
@@ -49,31 +49,31 @@ func (mr *MockMessageProcessorMockRecorder) ProcessMessage(ctx, record interface
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ProcessMessage", reflect.TypeOf((*MockMessageProcessor)(nil).ProcessMessage), ctx, record)
 }
 
-// MockMessageProcessError is a mock of MessageProcessError interface.
-type MockMessageProcessError struct {
+// MockMessageProcessorError is a mock of MessageProcessorError interface.
+type MockMessageProcessorError struct {
 	ctrl     *gomock.Controller
-	recorder *MockMessageProcessErrorMockRecorder
+	recorder *MockMessageProcessorErrorMockRecorder
 }
 
-// MockMessageProcessErrorMockRecorder is the mock recorder for MockMessageProcessError.
-type MockMessageProcessErrorMockRecorder struct {
-	mock *MockMessageProcessError
+// MockMessageProcessorErrorMockRecorder is the mock recorder for MockMessageProcessorError.
+type MockMessageProcessorErrorMockRecorder struct {
+	mock *MockMessageProcessorError
 }
 
-// NewMockMessageProcessError creates a new mock instance.
-func NewMockMessageProcessError(ctrl *gomock.Controller) *MockMessageProcessError {
-	mock := &MockMessageProcessError{ctrl: ctrl}
-	mock.recorder = &MockMessageProcessErrorMockRecorder{mock}
+// NewMockMessageProcessorError creates a new mock instance.
+func NewMockMessageProcessorError(ctrl *gomock.Controller) *MockMessageProcessorError {
+	mock := &MockMessageProcessorError{ctrl: ctrl}
+	mock.recorder = &MockMessageProcessorErrorMockRecorder{mock}
 	return mock
 }
 
 // EXPECT returns an object that allows the caller to indicate expected use.
-func (m *MockMessageProcessError) EXPECT() *MockMessageProcessErrorMockRecorder {
+func (m *MockMessageProcessorError) EXPECT() *MockMessageProcessorErrorMockRecorder {
 	return m.recorder
 }
 
 // IsRetryable mocks base method.
-func (m *MockMessageProcessError) IsRetryable() bool {
+func (m *MockMessageProcessorError) IsRetryable() bool {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "IsRetryable")
 	ret0, _ := ret[0].(bool)
@@ -81,21 +81,35 @@ func (m *MockMessageProcessError) IsRetryable() bool {
 }
 
 // IsRetryable indicates an expected call of IsRetryable.
-func (mr *MockMessageProcessErrorMockRecorder) IsRetryable() *gomock.Call {
+func (mr *MockMessageProcessorErrorMockRecorder) IsRetryable() *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "IsRetryable", reflect.TypeOf((*MockMessageProcessError)(nil).IsRetryable))
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "IsRetryable", reflect.TypeOf((*MockMessageProcessorError)(nil).IsRetryable))
 }
 
 // Error mocks base method.
-func (m *MockMessageProcessError) Error() error {
+func (m *MockMessageProcessorError) Error() string {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "Error")
-	ret0, _ := ret[0].(error)
+	ret0, _ := ret[0].(string)
 	return ret0
 }
 
 // Error indicates an expected call of Error.
-func (mr *MockMessageProcessErrorMockRecorder) Error() *gomock.Call {
+func (mr *MockMessageProcessorErrorMockRecorder) Error() *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Error", reflect.TypeOf((*MockMessageProcessError)(nil).Error))
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Error", reflect.TypeOf((*MockMessageProcessorError)(nil).Error))
+}
+
+// RetryAfter mocks base method.
+func (m *MockMessageProcessorError) RetryAfter() int {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "RetryAfter")
+	ret0, _ := ret[0].(int)
+	return ret0
+}
+
+// RetryAfter indicates an expected call of RetryAfter.
+func (mr *MockMessageProcessorErrorMockRecorder) RetryAfter() *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "RetryAfter", reflect.TypeOf((*MockMessageProcessorError)(nil).RetryAfter))
 }
