@@ -73,7 +73,6 @@ func TestRetryableMessageProcessor_ProcessMessageFailure_ExponentialBackOff(t *t
 	assert.NotNil(t, e)
 }
 
-
 func TestRetryableMessageProcessor_ProcessMessageFailure_RetryAfter(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
@@ -113,7 +112,7 @@ func TestRetryableMessageProcessor_ProcessMessageFailure_RetryAfter(t *testing.T
 type TestError struct {
 	Retryable bool
 	OrigErr   error
-	Wait	   int
+	Wait      int
 }
 
 func (t TestError) Error() error {
