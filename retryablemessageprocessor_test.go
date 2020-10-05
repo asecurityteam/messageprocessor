@@ -61,7 +61,7 @@ func TestRetryableMessageProcessor_ProcessMessageFailure_ExponentialBackOff(t *t
 		"rawpayload":"{\"channel\":\"channelbob\",\"text\":\"the message\"}"
 	}`)
 	currentTime := time.Now()
-	sequenceNumber := "12345"
+	sequenceNumber := "12346"
 	kinesisRecord := kinesis.Record{
 		Data:                        incomingDataRecord,
 		ApproximateArrivalTimestamp: &currentTime,
@@ -96,7 +96,7 @@ func TestRetryableMessageProcessor_ProcessMessageFailure_RetryAfter(t *testing.T
 		"rawpayload":"{\"channel\":\"channelbob\",\"text\":\"the message\"}"
 	}`)
 	currentTime := time.Now()
-	sequenceNumber := "12345"
+	sequenceNumber := "12347"
 	kinesisRecord := kinesis.Record{
 		Data:                        incomingDataRecord,
 		ApproximateArrivalTimestamp: &currentTime,
