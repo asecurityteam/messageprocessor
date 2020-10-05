@@ -39,13 +39,13 @@ func TestRetryableMessageProcessor_ProcessMessageSuccess(t *testing.T) {
 	assert.Nil(t, e)
 }
 
-func TestRetryableMessageProcessor_ProcessMessageFailure(t *testing.T) {
+func TestRetryableMessageProcessor_ProcessMessageFailure_ExponentialBackOff(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
 
 	mockMessageProcessor := NewMockMessageProcessor(ctrl)
 
-	attempts := 2
+	attempts := 4
 	retryableMessageProcessor := RetryableMessageProcessor{
 		maxAttempts: attempts,
 		wrapped:     mockMessageProcessor,
@@ -54,6 +54,42 @@ func TestRetryableMessageProcessor_ProcessMessageFailure(t *testing.T) {
 	testError := TestError{
 		Retryable: true,
 		OrigErr:   fmt.Errorf("TestError"),
+	}
+
+	incomingDataRecord := []byte(`{
+		"type":"CHANNEL",
+		"rawpayload":"{\"channel\":\"channelbob\",\"text\":\"the message\"}"
+	}`)
+	currentTime := time.Now()
+	sequenceNumber := "12345"
+	kinesisRecord := kinesis.Record{
+		Data:                        incomingDataRecord,
+		ApproximateArrivalTimestamp: &currentTime,
+		SequenceNumber:              &sequenceNumber,
+	}
+
+	mockMessageProcessor.EXPECT().ProcessMessage(gomock.Any(), gomock.Any()).Return(testError).Times(attempts)
+	e := retryableMessageProcessor.ProcessMessage(context.Background(), &kinesisRecord)
+	assert.NotNil(t, e)
+}
+
+
+func TestRetryableMessageProcessor_ProcessMessageFailure_RetryAfter(t *testing.T) {
+	ctrl := gomock.NewController(t)
+	defer ctrl.Finish()
+
+	mockMessageProcessor := NewMockMessageProcessor(ctrl)
+
+	attempts := 4
+	retryableMessageProcessor := RetryableMessageProcessor{
+		maxAttempts: attempts,
+		wrapped:     mockMessageProcessor,
+	}
+
+	testError := TestError{
+		Retryable: true,
+		OrigErr:   fmt.Errorf("TestError"),
+		Wait:      2,
 	}
 
 	incomingDataRecord := []byte(`{
