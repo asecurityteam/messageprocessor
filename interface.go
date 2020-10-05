@@ -15,4 +15,5 @@ type MessageProcessor interface {
 type MessageProcessError interface {
 	IsRetryable() bool
 	Error() error
+	RetryAfter() int
 }

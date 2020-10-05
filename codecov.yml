@@ -13,3 +13,7 @@ coverage:
         informational: false
         only_pulls: false
     patch: off
+ignore:
+  - "pkg/mocks"
+  - "mock_*.go"
+  - "*_test.go"
