@@ -8,12 +8,12 @@ import (
 
 // MessageProcessor processes a consumed message. Implementors are responsible for unmarshalling the data
 type MessageProcessor interface {
-	ProcessMessage(ctx context.Context, record *kinesis.Record) MessageProcessError
+	ProcessMessage(ctx context.Context, record *kinesis.Record) MessageProcessorError
 }
 
-// MessageProcessError represents an error that can be used to indicate to the consumer that an error should be retried
-type MessageProcessError interface {
+// MessageProcessorError represents an error that can be used to indicate to the consumer that an error should be retried
+type MessageProcessorError interface {
 	IsRetryable() bool
-	Error() error
+	Error() string
 	RetryAfter() int
 }

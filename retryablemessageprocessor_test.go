@@ -108,15 +108,15 @@ func TestRetryableMessageProcessor_ProcessMessageFailure_RetryAfter(t *testing.T
 	assert.NotNil(t, e)
 }
 
-// TestError implements MessageProcessError and contains a Retryable flag for retryable errors
+// TestError implements MessageProcessorError and contains a Retryable flag for retryable errors
 type TestError struct {
 	Retryable bool
 	OrigErr   error
 	Wait      int
 }
 
-func (t TestError) Error() error {
-	return t.OrigErr
+func (t TestError) Error() string {
+	return t.OrigErr.Error()
 }
 
 // IsRetryable indicates whether or not the JiraClient Error that was returned should be retried

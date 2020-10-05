@@ -14,7 +14,7 @@ import (
 // MaxRetries is the maximum number of time's we'd like to retry processing a record before quitting
 const consumerRetriesExceeded = "kinesis.consumer_error.retries_exceeded"
 
-// MaxRetriesExceededError implements MessageProcessError and is used to indicate to upstream application/
+// MaxRetriesExceededError implements MessageProcessorError and is used to indicate to upstream application/
 // decorators that retries have been attempted and exhausted
 type MaxRetriesExceededError struct {
 	Retryable bool
@@ -22,8 +22,8 @@ type MaxRetriesExceededError struct {
 	Wait      int
 }
 
-func (t MaxRetriesExceededError) Error() error {
-	return t.OrigErr
+func (t MaxRetriesExceededError) Error() string {
+	return t.OrigErr.Error()
 }
 
 // IsRetryable indicates whether or not the JiraClient Error that was returned should be retried
@@ -48,13 +48,13 @@ type RetryableMessageProcessor struct {
 // ProcessMessage invokes the wrapped `MessageProcessor`. Attempts retries using exponential backoff
 // if underlying 'MessageProcessor' returns an error.
 // If 'maxAttempts' are exceeded without successful processing, it emits a stat indicating the same
-func (t *RetryableMessageProcessor) ProcessMessage(ctx context.Context, record *kinesis.Record) MessageProcessError {
+func (t *RetryableMessageProcessor) ProcessMessage(ctx context.Context, record *kinesis.Record) MessageProcessorError {
 	stat := xstats.FromContext(ctx)
-	var messageProcErr MessageProcessError
+	var messageProcErr MessageProcessorError
 	var attemptNum int
 	for attemptNum < t.maxAttempts {
 		messageProcErr = t.wrapped.ProcessMessage(ctx, record)
-		if messageProcErr != nil && messageProcErr.Error() != nil && messageProcErr.IsRetryable() {
+		if messageProcErr != nil && messageProcErr.IsRetryable() {
 			if messageProcErr.RetryAfter() > 0 {
 				// Wait for duration specified in 'Retry-After'
 				waitRetryAfter(messageProcErr.RetryAfter())
@@ -72,7 +72,7 @@ func (t *RetryableMessageProcessor) ProcessMessage(ctx context.Context, record *
 		stat.Count(consumerRetriesExceeded, 1)
 		maxRetriesExceededErr := MaxRetriesExceededError{
 			Retryable: false,
-			OrigErr:   errors.Wrap(messageProcErr.Error(), "Max Retries Exceeded"),
+			OrigErr:   errors.Wrap(messageProcErr, "Max retries exceeded"),
 			Wait:      0,
 		}
 		return maxRetriesExceededErr
@@ -98,7 +98,7 @@ func waitToRetry(attemptNum int) {
 // waitRetryAfter is used to support a wait for exact duration as specified in 'Retry-After' header.
 // The consumer of this library is responsible to obtain/compute duration of wait time
 // by parsing underlying HTTP response and storing that info in
-// MessageProcessError.RetryAfter field
+// MessageProcessorError.RetryAfter field
 func waitRetryAfter(retryAfter int) {
 	time.Sleep(time.Duration(retryAfter) * time.Second)
 }
