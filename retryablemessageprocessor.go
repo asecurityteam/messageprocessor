@@ -54,7 +54,7 @@ func (t *RetryableMessageProcessor) ProcessMessage(ctx context.Context, record *
 	var attemptNum int
 	for attemptNum < t.maxAttempts {
 		messageProcErr = t.wrapped.ProcessMessage(ctx, record)
-		if messageProcErr != nil && messageProcErr.Error() != "" && messageProcErr.IsRetryable() {
+		if messageProcErr != nil && messageProcErr.IsRetryable() {
 			if messageProcErr.RetryAfter() > 0 {
 				// Wait for duration specified in 'Retry-After'
 				waitRetryAfter(messageProcErr.RetryAfter())
