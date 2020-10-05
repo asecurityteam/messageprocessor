@@ -77,6 +77,7 @@ func TestRetryableMessageProcessor_ProcessMessageFailure(t *testing.T) {
 type TestError struct {
 	Retryable bool
 	OrigErr   error
+	Wait	   int
 }
 
 func (t TestError) Error() error {
@@ -86,4 +87,8 @@ func (t TestError) Error() error {
 // IsRetryable indicates whether or not the JiraClient Error that was returned should be retried
 func (t TestError) IsRetryable() bool {
 	return t.Retryable
+}
+
+func (t TestError) RetryAfter() int {
+	return t.Wait
 }

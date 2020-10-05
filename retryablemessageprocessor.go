@@ -31,7 +31,13 @@ func (t *RetryableMessageProcessor) ProcessMessage(ctx context.Context, record *
 	for attemptNum < t.maxAttempts {
 		messageProcErr = t.wrapped.ProcessMessage(ctx, record)
 		if messageProcErr != nil && messageProcErr.Error() != nil && messageProcErr.IsRetryable() {
-			waitToRetry(attemptNum)
+			if messageProcErr.RetryAfter() > 0 {
+				// Wait for duration specified in 'Retry-After'
+				waitRetryAfter(messageProcErr.RetryAfter())
+			} else {
+				// Or perform exponential backoff
+				waitToRetry(attemptNum)
+			}
 		} else {
 			break
 		}
@@ -57,4 +63,12 @@ func NewRetryableMessageProcessor(attempts int) func(MessageProcessor) MessagePr
 func waitToRetry(attemptNum int) {
 	timeToWait := math.Pow(2, float64(attemptNum))
 	time.Sleep(time.Duration(timeToWait) * time.Second)
+}
+
+// waitRetryAfter is used to support a wait for exact duration as specified in 'Retry-After' header.
+// The consumer of this library is responsible to obtain/compute duration of wait time
+// by parsing underlying HTTP response and storing that info in
+// MessageProcessError.RetryAfter field
+func waitRetryAfter(retryAfter int) {
+	time.Sleep(time.Duration(retryAfter) * time.Second)
 }
