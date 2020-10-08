@@ -5,13 +5,17 @@ import (
 	"math"
 	"time"
 
-	"github.com/pkg/errors"
-
 	"github.com/aws/aws-sdk-go/service/kinesis"
+	"github.com/pkg/errors"
 	"github.com/rs/xstats"
 )
 
-// MaxRetries is the maximum number of time's we'd like to retry processing a record before quitting
+// MaxAttempts is the maximum number of time's we'd like to retry processing a record before quitting
+// By default, the maximum number is set to 1, which means application needs to set a property
+// <APPNAME>_KINESIS-RETRY-CONFIG_MAXATTEMPTS to configure a higher value
+const maxAttempts = 1
+
+// Stat emitted by lib if max attempts are exceeded
 const consumerRetriesExceeded = "kinesis.consumer_error.retries_exceeded"
 
 // MaxRetriesExceededError implements MessageProcessorError and is used to indicate to upstream application/
@@ -34,6 +38,41 @@ func (t MaxRetriesExceededError) IsRetryable() bool {
 // RetryAfter is not relevant in context of MaxRetriesExceededError as IsRetryable is set to false
 func (t MaxRetriesExceededError) RetryAfter() int {
 	return t.Wait
+}
+
+// RetryableMessageProcessorConfig is the config for creating a RetryableMessageProcessor
+type RetryableMessageProcessorConfig struct {
+	MaxAttempts int `description:"Maximum number of attempts to process kinesis message"`
+}
+
+// Name of the config root.
+func (*RetryableMessageProcessorConfig) Name() string {
+	return "kinesis-retry-config"
+}
+
+// RetryableMessageProcessorComponent implements the settings.Component interface.
+type RetryableMessageProcessorComponent struct{}
+
+// NewComponent populates default values.
+func NewComponent() *RetryableMessageProcessorComponent {
+	return &RetryableMessageProcessorComponent{}
+}
+
+// Settings generates a config populated with defaults.
+func (*RetryableMessageProcessorComponent) Settings() *RetryableMessageProcessorConfig {
+	return &RetryableMessageProcessorConfig{
+		MaxAttempts: maxAttempts,
+	}
+}
+
+func (c *RetryableMessageProcessorComponent) New(_ context.Context, conf *RetryableMessageProcessorConfig) (func(MessageProcessor) MessageProcessor, error) { // nolint
+
+	return func(processor MessageProcessor) MessageProcessor {
+		return &RetryableMessageProcessor{
+			maxAttempts: conf.MaxAttempts,
+			wrapped:     processor,
+		}
+	}, nil
 }
 
 // RetryableMessageProcessor is a `MessageProcessor` decorator that re-attempts
@@ -78,14 +117,6 @@ func (t *RetryableMessageProcessor) ProcessMessage(ctx context.Context, record *
 		return maxRetriesExceededErr
 	}
 	return messageProcErr
-}
-
-// NewRetryableMessageProcessor returns a function that wraps a `messageprocessor.MessageProcessor` in a
-// `RetryableMessageProcessor` `messageprocessor.MessageProcessor`.
-func NewRetryableMessageProcessor(attempts int) func(MessageProcessor) MessageProcessor {
-	return func(next MessageProcessor) MessageProcessor {
-		return &RetryableMessageProcessor{maxAttempts: attempts, wrapped: next}
-	}
 }
 
 // waitToRetry is used to perform an exponential backoff for http calls
