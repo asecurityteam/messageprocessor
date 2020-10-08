@@ -47,7 +47,7 @@ type RetryableMessageProcessorConfig struct {
 
 // Name of the config root.
 func (*RetryableMessageProcessorConfig) Name() string {
-	return "kinesis-retry-config"
+	return "kinesisretry"
 }
 
 // RetryableMessageProcessorComponent implements the settings.Component interface.
