@@ -108,7 +108,7 @@ func TestRetryableMessageProcessor_ProcessMessageFailure_RetryAfter(t *testing.T
 	assert.NotNil(t, e)
 }
 
-// TestError implements MessageProcessorError and contains a Retryable flag for retryable errors
+// TestError implements Error and contains a Retryable flag for retryable errors
 type TestError struct {
 	Retryable bool
 	OrigErr   error

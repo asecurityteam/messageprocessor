@@ -36,10 +36,10 @@ func (m *MockMessageProcessor) EXPECT() *MockMessageProcessorMockRecorder {
 }
 
 // ProcessMessage mocks base method.
-func (m *MockMessageProcessor) ProcessMessage(ctx context.Context, record *kinesis.Record) MessageProcessorError {
+func (m *MockMessageProcessor) ProcessMessage(ctx context.Context, record *kinesis.Record) Error {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "ProcessMessage", ctx, record)
-	ret0, _ := ret[0].(MessageProcessorError)
+	ret0, _ := ret[0].(Error)
 	return ret0
 }
 
@@ -49,7 +49,7 @@ func (mr *MockMessageProcessorMockRecorder) ProcessMessage(ctx, record interface
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ProcessMessage", reflect.TypeOf((*MockMessageProcessor)(nil).ProcessMessage), ctx, record)
 }
 
-// MockMessageProcessorError is a mock of MessageProcessorError interface.
+// MockMessageProcessorError is a mock of Error interface.
 type MockMessageProcessorError struct {
 	ctrl     *gomock.Controller
 	recorder *MockMessageProcessorErrorMockRecorder

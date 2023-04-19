@@ -18,7 +18,7 @@ const maxAttempts = 1
 // Stat emitted by lib if max attempts are exceeded
 const consumerRetriesExceeded = "kinesis.consumer_error.retries_exceeded"
 
-// MaxRetriesExceededError implements MessageProcessorError and is used to indicate to upstream application/
+// MaxRetriesExceededError implements Error and is used to indicate to upstream application/
 // decorators that retries have been attempted and exhausted
 type MaxRetriesExceededError struct {
 	Retryable bool
@@ -87,9 +87,9 @@ type RetryableMessageProcessor struct {
 // ProcessMessage invokes the wrapped `MessageProcessor`. Attempts retries using exponential backoff
 // if underlying 'MessageProcessor' returns an error.
 // If 'maxAttempts' are exceeded without successful processing, it emits a stat indicating the same
-func (t *RetryableMessageProcessor) ProcessMessage(ctx context.Context, record *kinesis.Record) MessageProcessorError {
+func (t *RetryableMessageProcessor) ProcessMessage(ctx context.Context, record *kinesis.Record) Error {
 	stat := xstats.FromContext(ctx)
-	var messageProcErr MessageProcessorError
+	var messageProcErr Error
 	var attemptNum int
 	for attemptNum < t.maxAttempts {
 		messageProcErr = t.wrapped.ProcessMessage(ctx, record)
@@ -129,7 +129,7 @@ func waitToRetry(attemptNum int) {
 // waitRetryAfter is used to support a wait for exact duration as specified in 'Retry-After' header.
 // The consumer of this library is responsible to obtain/compute duration of wait time
 // by parsing underlying HTTP response and storing that info in
-// MessageProcessorError.RetryAfter field
+// Error.RetryAfter field
 func waitRetryAfter(retryAfter int) {
 	time.Sleep(time.Duration(retryAfter) * time.Second)
 }
