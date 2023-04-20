@@ -36,10 +36,10 @@ func (m *MockMessageProcessor) EXPECT() *MockMessageProcessorMockRecorder {
 }
 
 // ProcessMessage mocks base method.
-func (m *MockMessageProcessor) ProcessMessage(ctx context.Context, record *kinesis.Record) MessageProcessorError {
+func (m *MockMessageProcessor) ProcessMessage(ctx context.Context, record *kinesis.Record) MessageError {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "ProcessMessage", ctx, record)
-	ret0, _ := ret[0].(MessageProcessorError)
+	ret0, _ := ret[0].(MessageError)
 	return ret0
 }
 
@@ -49,7 +49,7 @@ func (mr *MockMessageProcessorMockRecorder) ProcessMessage(ctx, record interface
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ProcessMessage", reflect.TypeOf((*MockMessageProcessor)(nil).ProcessMessage), ctx, record)
 }
 
-// MockMessageProcessorError is a mock of MessageProcessorError interface.
+// MockMessageProcessorError is a mock of MessageError interface.
 type MockMessageProcessorError struct {
 	ctrl     *gomock.Controller
 	recorder *MockMessageProcessorErrorMockRecorder
@@ -86,18 +86,18 @@ func (mr *MockMessageProcessorErrorMockRecorder) IsRetryable() *gomock.Call {
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "IsRetryable", reflect.TypeOf((*MockMessageProcessorError)(nil).IsRetryable))
 }
 
-// Error mocks base method.
+// MessageError mocks base method.
 func (m *MockMessageProcessorError) Error() string {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "Error")
+	ret := m.ctrl.Call(m, "MessageError")
 	ret0, _ := ret[0].(string)
 	return ret0
 }
 
-// Error indicates an expected call of Error.
+// MessageError indicates an expected call of MessageError.
 func (mr *MockMessageProcessorErrorMockRecorder) Error() *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Error", reflect.TypeOf((*MockMessageProcessorError)(nil).Error))
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "MessageError", reflect.TypeOf((*MockMessageProcessorError)(nil).Error))
 }
 
 // RetryAfter mocks base method.
