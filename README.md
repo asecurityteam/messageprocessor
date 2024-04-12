@@ -1,7 +1,6 @@
 <a id="markdown-messageprocessor---an-abstraction-for-consuming-messages-from-Kinesis" name="messageprocessor---an-abstraction-for-consuming-messages-from-Kinesis"></a>
 # messageprocessor - An abstraction for consuming aws Kinesis messages
 [![GoDoc](https://godoc.org/github.com/asecurityteam/messageprocessor?status.svg)](https://godoc.org/github.com/asecurityteam/messageprocessor)
-[![codecov.io](https://codecov.io/github/asecurityteam/messageprocessor/coverage.svg?branch=master)](https://codecov.io/github/asecurityteam/logevent?branch=master)
 <!-- TOC -->
 
 - [messageprocessor - An abstraction for consuming aws Kinesis messages](#messageprocessor---an-abstraction-for-consuming-messages-from-Kinesis)
