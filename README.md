@@ -1,8 +1,19 @@
 <a id="markdown-messageprocessor---an-abstraction-for-consuming-messages-from-Kinesis" name="messageprocessor---an-abstraction-for-consuming-messages-from-Kinesis"></a>
 # messageprocessor - An abstraction for consuming aws Kinesis messages
 [![GoDoc](https://godoc.org/github.com/asecurityteam/messageprocessor?status.svg)](https://godoc.org/github.com/asecurityteam/messageprocessor)
-[![Build Status](https://travis-ci.com/asecurityteam/logevent.png?branch=master)](https://travis-ci.com/asecurityteam/messageprocessor)
-[![codecov.io](https://codecov.io/github/asecurityteam/messageprocessor/coverage.svg?branch=master)](https://codecov.io/github/asecurityteam/logevent?branch=master)
+
+[![Bugs](https://sonarcloud.io/api/project_badges/measure?project=asecurityteam_messageprocessor&metric=bugs)](https://sonarcloud.io/dashboard?id=asecurityteam_messageprocessor)
+[![Code Smells](https://sonarcloud.io/api/project_badges/measure?project=asecurityteam_messageprocessor&metric=code_smells)](https://sonarcloud.io/dashboard?id=asecurityteam_messageprocessor)
+[![Coverage](https://sonarcloud.io/api/project_badges/measure?project=asecurityteam_messageprocessor&metric=coverage)](https://sonarcloud.io/dashboard?id=asecurityteam_messageprocessor)
+[![Duplicated Lines (%)](https://sonarcloud.io/api/project_badges/measure?project=asecurityteam_messageprocessor&metric=duplicated_lines_density)](https://sonarcloud.io/dashboard?id=asecurityteam_messageprocessor)
+[![Lines of Code](https://sonarcloud.io/api/project_badges/measure?project=asecurityteam_messageprocessor&metric=ncloc)](https://sonarcloud.io/dashboard?id=asecurityteam_messageprocessor)
+[![Maintainability Rating](https://sonarcloud.io/api/project_badges/measure?project=asecurityteam_messageprocessor&metric=sqale_rating)](https://sonarcloud.io/dashboard?id=asecurityteam_messageprocessor)
+[![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=asecurityteam_messageprocessor&metric=alert_status)](https://sonarcloud.io/dashboard?id=asecurityteam_messageprocessor)
+[![Reliability Rating](https://sonarcloud.io/api/project_badges/measure?project=asecurityteam_messageprocessor&metric=reliability_rating)](https://sonarcloud.io/dashboard?id=asecurityteam_messageprocessor)
+[![Security Rating](https://sonarcloud.io/api/project_badges/measure?project=asecurityteam_messageprocessor&metric=security_rating)](https://sonarcloud.io/dashboard?id=asecurityteam_messageprocessor)
+[![Technical Debt](https://sonarcloud.io/api/project_badges/measure?project=asecurityteam_messageprocessor&metric=sqale_index)](https://sonarcloud.io/dashboard?id=asecurityteam_messageprocessor)
+[![Vulnerabilities](https://sonarcloud.io/api/project_badges/measure?project=asecurityteam_messageprocessor&metric=vulnerabilities)](https://sonarcloud.io/dashboard?id=asecurityteam_messageprocessor)
+
 <!-- TOC -->
 
 - [messageprocessor - An abstraction for consuming aws Kinesis messages](#messageprocessor---an-abstraction-for-consuming-messages-from-Kinesis)
